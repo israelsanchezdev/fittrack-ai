@@ -1,13 +1,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Workout, Exercise } from '../types';
 
-// Safe access to API Key for Vite (import.meta.env) and Node (process.env) environments
+// Safe access to API Key for Vite (import.meta.env)
 const getApiKey = () => {
+  // Use type assertion to avoid TS errors if types aren't fully set up
   if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
     return (import.meta as any).env.VITE_API_KEY;
-  }
-  if (typeof process !== 'undefined' && process.env) {
-    return process.env.API_KEY;
   }
   return undefined;
 };
