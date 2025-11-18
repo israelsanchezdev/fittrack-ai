@@ -5,9 +5,8 @@ const storedKey = typeof window !== 'undefined' ? localStorage.getItem('sb_key')
 
 // Safe access to process.env for different environments
 // Vite/Vercel uses import.meta.env.VITE_...
-// Fix: cast import.meta to any to avoid TS error "Property 'env' does not exist on type 'ImportMeta'"
-const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL || (typeof process !== 'undefined' && process.env && process.env.SUPABASE_URL) || '';
-const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || (typeof process !== 'undefined' && process.env && process.env.SUPABASE_ANON_KEY) || '';
+const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
+const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
 const getUrl = () => storedUrl || envUrl || '';
 const getKey = () => storedKey || envKey || '';
