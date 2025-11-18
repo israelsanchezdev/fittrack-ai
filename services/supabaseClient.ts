@@ -1,18 +1,20 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+// 1. Try Local Storage (User manually entered keys in Settings)
 const storedUrl = typeof window !== 'undefined' ? localStorage.getItem('sb_url') : '';
 const storedKey = typeof window !== 'undefined' ? localStorage.getItem('sb_key') : '';
 
-// Safe access to process.env for different environments
-// Vite/Vercel uses import.meta.env.VITE_...
+// 2. Try Vite Environment Variables (Vercel Deployment)
+// We cast to 'any' to avoid TypeScript errors if types aren't perfectly configured
 const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
 const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
+// Priority: Local Storage > Environment Variables
 const getUrl = () => storedUrl || envUrl || '';
 const getKey = () => storedKey || envKey || '';
 
 // Initialize with available credentials or placeholders
-// We export 'let' so we can update this binding dynamically
+// We export 'let' so we can update this binding dynamically if the user changes settings
 export let supabase: SupabaseClient = createClient(
   getUrl() || 'https://placeholder.supabase.co', 
   getKey() || 'placeholder'
@@ -24,7 +26,6 @@ export const isSupabaseConfigured = () => {
   return url && 
          key &&
          url !== 'https://placeholder.supabase.co' && 
-         !url.includes('your-project-id') &&
          !url.includes('placeholder');
 };
 
@@ -44,6 +45,9 @@ export const clearSupabaseConfig = () => {
   localStorage.removeItem('sb_url');
   localStorage.removeItem('sb_key');
   
-  // Reset to placeholder
-  supabase = createClient('https://placeholder.supabase.co', 'placeholder');
+  // Reset to env vars if available, or placeholder
+  const fallbackUrl = envUrl || 'https://placeholder.supabase.co';
+  const fallbackKey = envKey || 'placeholder';
+  
+  supabase = createClient(fallbackUrl, fallbackKey);
 };
