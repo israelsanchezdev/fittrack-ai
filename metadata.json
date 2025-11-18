@@ -1,0 +1,5 @@
+{
+  "name": "FitTrack AI",
+  "description": "A smart social workout tracker powered by Gemini to log exercises, visualize progress, and receive AI-generated workout plans.",
+  "requestFramePermissions": []
+}
