@@ -1,19 +1,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Workout, Exercise } from '../types';
 
-// Safe access to API Key for Vite (import.meta.env)
-const getApiKey = () => {
-  // Use type assertion to avoid TS errors if types aren't fully set up
-  if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-    return (import.meta as any).env.VITE_API_KEY;
-  }
-  return undefined;
-};
+// Access API Key from Vite Environment Variables
+const apiKey = (import.meta as any).env?.VITE_API_KEY || '';
 
-// Initialize the client with the resolved key
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
+// Initialize the client
+// Note: If apiKey is missing, requests will fail. We rely on the Auth/Config flow or Vercel Env Vars to provide it.
+const ai = new GoogleGenAI({ apiKey });
 
 export const generateWorkoutPlan = async (prompt: string): Promise<string> => {
+  if (!apiKey) {
+    return "API Key is missing. Please configure it in settings or Vercel dashboard.";
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -31,6 +30,8 @@ export const generateWorkoutPlan = async (prompt: string): Promise<string> => {
 };
 
 export const analyzeWorkoutHistory = async (workouts: Workout[]): Promise<string> => {
+  if (!apiKey) return "API Key is missing.";
+
   const summary = workouts.slice(0, 5).map(w => ({
     date: w.date,
     name: w.name,
@@ -57,6 +58,8 @@ export const analyzeWorkoutHistory = async (workouts: Workout[]): Promise<string
 };
 
 export const suggestExercises = async (muscleGroup: string): Promise<string[]> => {
+  if (!apiKey) return [];
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
