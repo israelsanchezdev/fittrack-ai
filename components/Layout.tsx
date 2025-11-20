@@ -110,7 +110,7 @@ export const Layout: React.FC<LayoutProps> = ({
       <aside className="w-64 bg-gray-800 border-r border-gray-700 hidden md:flex flex-col fixed h-full z-20">
         <div className="p-6 border-b border-gray-700">
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
-            FitTrack AI
+            Sanchez Fitness
           </h1>
           <p className="text-xs text-gray-400 mt-1">Smarter workout logging</p>
         </div>
