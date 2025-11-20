@@ -24,7 +24,7 @@ const navItems = [
   { id: ViewState.AI_COACH, label: 'AI Coach', icon: Sparkles },
 ];
 
-// Max avatar size in MB
+// Max avatar size (in MB)
 const MAX_AVATAR_SIZE_MB = 2;
 const MAX_AVATAR_SIZE_BYTES = MAX_AVATAR_SIZE_MB * 1024 * 1024;
 
@@ -49,9 +49,11 @@ export const Layout: React.FC<LayoutProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Basic type check
+    // File type check
     if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file (JPG, PNG, etc). Your old avatar is unchanged.');
+      alert(
+        'Please upload an image file (JPG, PNG, etc). Your old avatar is unchanged.'
+      );
       event.target.value = '';
       return;
     }
@@ -68,7 +70,7 @@ export const Layout: React.FC<LayoutProps> = ({
     try {
       setIsUploading(true);
       await uploadAvatar(file);
-      // Only reload on success so we get the new avatar
+      // Only reload on success so we see the new avatar
       window.location.reload();
     } catch (err: any) {
       console.error(err);
@@ -93,7 +95,7 @@ export const Layout: React.FC<LayoutProps> = ({
         className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
           isActive
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
-            : 'text-gray-400 hover:text-white hover:bg-gray-800'
+            : 'text-gray-300 hover:text-white hover:bg-gray-700'
         }`}
       >
         <Icon className="w-4 h-4" />
@@ -104,26 +106,22 @@ export const Layout: React.FC<LayoutProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-900 flex font-sans">
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:flex-col md:w-64 border-r border-gray-800 bg-gray-950/80 backdrop-blur-sm">
-        {/* Brand */}
-        <div className="p-4 border-b border-gray-800 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center">
-            <span className="text-white text-xl font-black">🏋️‍♂️</span>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white tracking-tight">
-              FitTrack AI
-            </p>
-            <p className="text-xs text-gray-500">Smarter workout logging</p>
-          </div>
+      {/* Sidebar – same width/spacing as original */}
+      <aside className="w-64 bg-gray-800 border-r border-gray-700 hidden md:flex flex-col fixed h-full z-20">
+        <div className="p-6 border-b border-gray-700">
+          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+            FitTrack AI
+          </h1>
+          <p className="text-xs text-gray-400 mt-1">Smarter workout logging</p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1">{navItems.map(renderNavItem)}</nav>
+        <nav className="flex-1 p-4 space-y-2">
+          {navItems.map(renderNavItem)}
+        </nav>
 
         {/* User Profile & Logout */}
-        <div className="p-4 border-t border-gray-800 bg-gray-900/80">
+        <div className="p-4 border-t border-gray-700 bg-gray-900">
           {/* Hidden file input for avatar uploads */}
           <input
             type="file"
@@ -180,8 +178,8 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
       </aside>
 
-      {/* Mobile Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between bg-gray-950/95 border-t border-gray-800 px-4 py-2">
+      {/* Mobile Bottom Nav – unchanged */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 z-50 flex justify-around p-3">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;
@@ -193,7 +191,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 isActive ? 'text-indigo-400' : 'text-gray-400'
               }`}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-6 h-6" />
               <span className="text-[10px]">{item.label}</span>
             </button>
           );
@@ -203,12 +201,12 @@ export const Layout: React.FC<LayoutProps> = ({
           onClick={onLogout}
           className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-400"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-6 h-6" />
           <span className="text-[10px]">Exit</span>
         </button>
-      </nav>
+      </div>
 
-      {/* Main Content */}
+      {/* Main Content – same margin as original */}
       <main className="flex-1 md:ml-64 p-4 md:p-8 mb-16 md:mb-0 overflow-y-auto">
         {children}
       </main>
